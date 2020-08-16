@@ -5870,8 +5870,13 @@ routing_delete_gateways() {
 	! we_are_root && return 1
 	! find_binary "netstat" && return 1
 	! find_binary "route" && return 1
+	count=0
 	while [ "1" = "1" ];
 	do
+	    count=$((${count}+1))
+		if [ ${count} -ge 50 ]; then
+		  break
+		fi
 		gatehost=`${netstatbin} -rn | ${grepbin} "^0.0.0.0 " | ${tailbin} -1 | ${sedbin} -e "s/  */ /g" | ${cutbin} -d\  -f2`
 		if [ "a${gatehost}" != "a" ]; then
 			debug "Deleting default gateway %s.\n" "${gatehost}"
